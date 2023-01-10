@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const cors = require("cors");
 // routes
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
@@ -21,6 +22,7 @@ mongoose.set('strictQuery', true);
 
 // middlewares
 app.use(express.json());
+app.use(cors());
 app.use(helmet());
 app.use(morgan("common"));
 
