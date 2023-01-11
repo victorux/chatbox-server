@@ -11,6 +11,8 @@ const authRoute = require("./routes/auth");
 
 dotenv.config();
 
+const PORT = process.env.PORT;
+
 mongoose.connect(
     process.env.MONGO_URL, 
     { useNewUrlParser: true, useUnifiedTopology: true }, 
@@ -21,14 +23,19 @@ mongoose.connect(
 mongoose.set('strictQuery', true);
 
 // middlewares
-app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan("common"));
 
+// express
+app.use(express.json({limit: '20mb'}));
+app.use(express.urlencoded({ extended: true, limit: '20mb'}));
+
+// api
 app.use("/api/users", userRoute);
 app.use("/api/auth/", authRoute);
 
-app.listen(8800, () => {
-    console.log("Backend server is running!");
+
+app.listen(PORT, () => {
+    console.log("Server started on port " + PORT );
 })
