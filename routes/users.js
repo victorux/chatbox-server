@@ -2,6 +2,7 @@ const User = require("../models/User");
 const { verifyTokenAndAuthorization } = require("./verifyToken");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+const cloudinary = require("../cloudinary/cloudinary");
 
 // Update User
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
@@ -32,6 +33,37 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
         res.status(500).json(err);
     }
 });
+
+
+router.post("/updateimage/:id", async (req, res) => {
+    const { image } = req.body;
+    
+    const uploadedImage = await cloudinary.uploader.upload(image, {
+        upload_preset: 'unsigned_upload',
+        allowed_formats: ['png', 'jpg', 'jpeg', 'svg', 'ico', 'webp']
+    },
+    async function (err, result) {
+        if(err){console.log(err); return;}else if(result){
+            const { url } = result;
+            try {
+                const updatedUser = await User.findByIdAndUpdate(
+                    req.params.id,
+                    {
+                        $set: {profilePicture: url}
+                    },
+                    {
+                        new: true
+                    }
+                );
+                const {password, ...others} = updatedUser._doc;
+                res.status(200).json({...others});
+            } catch (err) {
+                res.status(400).json(err) 
+            }
+        };
+    });    
+});
+
 
 
 
