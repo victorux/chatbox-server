@@ -35,7 +35,7 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 
-router.post("/updateimage/:id", async (req, res) => {
+router.post("/updateimage/:id", verifyTokenAndAuthorization, async (req, res) => {
     const { image } = req.body;
     
     const uploadedImage = await cloudinary.uploader.upload(image, {
