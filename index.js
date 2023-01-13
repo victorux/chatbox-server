@@ -8,6 +8,8 @@ const cors = require("cors");
 // routes
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
+const conversationsRoute = require("./routes/conversations");
+const messagesRoute = require("./routes/messages");
 
 dotenv.config();
 
@@ -33,7 +35,9 @@ app.use(express.urlencoded({ extended: true, limit: '20mb'}));
 
 // api
 app.use("/api/users", userRoute);
-app.use("/api/auth/", authRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/conversations", conversationsRoute);
+app.use("/api/messages", messagesRoute);
 
 
 app.listen(PORT, () => {
