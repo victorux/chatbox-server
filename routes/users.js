@@ -4,6 +4,18 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const cloudinary = require("../cloudinary/cloudinary");
 
+
+router.get("/", async (req,res) => {
+    const userId = req.query.userId;
+    try {
+        const user = await User.findById(userId);
+        const { password, email, updatedAt, ...other } = user._doc;
+        res.status(200).json(other);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 // Update User
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     if(req.body.password){
