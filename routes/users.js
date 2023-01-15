@@ -4,7 +4,7 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const cloudinary = require("../cloudinary/cloudinary");
 
-
+// get a user
 router.get("/", async (req,res) => {
     const userId = req.query.userId;
     try {
@@ -15,6 +15,29 @@ router.get("/", async (req,res) => {
         res.status(500).json(err);
     }
 });
+
+// get all users
+router.get("/all", async (req,res) => {
+    try {
+        const users = await User.find();
+
+        let savedUsers = [];
+
+        await users.map((object)=>{
+            savedUsers.push({
+                _id: object._id,
+                firstName: object.firstName,
+                lastName: object.lastName,
+                email: object.email,
+                profilePicture: object.profilePicture,     
+            });
+        });
+        res.status(200).json(savedUsers);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+});
+
 
 // Update User
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
