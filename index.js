@@ -13,8 +13,6 @@ const messagesRoute = require("./routes/messages");
 
 dotenv.config();
 
-const PORT = process.env.PORT;
-
 mongoose.connect(
     process.env.MONGO_URL, 
     { useNewUrlParser: true, useUnifiedTopology: true }, 
@@ -40,6 +38,6 @@ app.use("/api/conversations", conversationsRoute);
 app.use("/api/messages", messagesRoute);
 
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("Server started on port " + PORT );
 })
