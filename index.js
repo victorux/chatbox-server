@@ -13,6 +13,12 @@ const messagesRoute = require("./routes/messages");
 
 dotenv.config();
 
+const corsOptions ={
+    origin:'https://chabox-server.onrender.com', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+
 mongoose.connect(
     process.env.MONGO_URL, 
     { useNewUrlParser: true, useUnifiedTopology: true }, 
@@ -23,7 +29,7 @@ mongoose.connect(
 mongoose.set('strictQuery', true);
 
 // middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(morgan("common"));
 
