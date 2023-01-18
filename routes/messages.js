@@ -12,7 +12,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-
 // get
 router.get("/:conversationId", async (req, res) => {
     try {
@@ -25,5 +24,23 @@ router.get("/:conversationId", async (req, res) => {
         res.status(403).json(err);
         
     }
-})
+});
+
+router.post("/last/message", async (req, res) => {
+    try {
+        const message = await Message.aggregate([
+            { $match: {
+                conversationId: req.body.conversationId, 
+                sender: req.body.sender 
+            } },
+            { $sort: { updatedAt: -1 } },
+            { $limit: 1 }
+          ]);
+        res.status(200).json(message[0]);
+    } catch (err) {
+        res.status(403).json(err);
+    }
+});
+
+
 module.exports = router;
